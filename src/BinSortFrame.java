@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class BinSortFrame extends JFrame {
+    CardLayout cardLayout;
 
     JPanel northPanel;
     JPanel centerPanel;
@@ -11,6 +12,9 @@ public class BinSortFrame extends JFrame {
 
     JPanel southButtonsPanel;
     JPanel southInputPanel;
+
+    JPanel card1;
+    JPanel card2;
 
     JPanel centerTAPanel;
     JPanel centerFileBtnPanel;
@@ -62,6 +66,7 @@ public class BinSortFrame extends JFrame {
     }
 
     private JPanel createCenterPanel() {
+
         centerPanel = new JPanel();
         centerPanel.setLayout(new BorderLayout());
 
@@ -85,43 +90,14 @@ public class BinSortFrame extends JFrame {
 
 
         centerFileBtnPanel = new JPanel();
-        centerFileBtnPanel.setLayout(new GridLayout(1, 1));
+        centerFileBtnPanel.setLayout(new GridLayout(2, 4));
 
-        removeLastValueButton = new JButton("Remove Last Value");
-        removeLastValueButton.addActionListener(e -> {
-            System.out.println("Remove Last Value");
-            binSortArrayList.deleteLastAdded();
-            listString = "";
-            for (String s : binSortArrayList.toList()) {
-                listString += s + "\n";
-            }
-            listTextArea.setText(listString);
-            logString += binSortArrayList.getLog();
-            logTextArea.setText(logString);
-        });
-        centerFileBtnPanel.add(removeLastValueButton);
-
-
-
-        centerPanel.add(centerFileBtnPanel, BorderLayout.SOUTH);
-        centerPanel.add(centerTAPanel, BorderLayout.CENTER);
-        centerPanel.add(centerNorthPanel, BorderLayout.NORTH);
-        return centerPanel;
-    }
-
-    private JPanel createSouthPanel() {
-        southPanel = new JPanel(new GridLayout(1, 2));
-
-        goButton = new JButton("Search");
-        quitButton = new JButton("Quit");
-        addOutputFileButton = new JButton("Output to File");
-        minCountLabel = new JLabel("Search Term:");
+        southInputPanel = new JPanel(new GridLayout(2, 1));
+        minCountLabel = new JLabel("String To be Added:");
         addTermTF = new JTextField(35);
         addTermTF.setText("Hello World!");
 
-        southButtonsPanel = new JPanel(new GridLayout(1, 2));
-        southInputPanel = new JPanel(new GridLayout(2, 1));
-
+        goButton = new JButton("Add Value to List");
 
         goButton.addActionListener(e -> {
             System.out.println("Go Button");
@@ -135,16 +111,51 @@ public class BinSortFrame extends JFrame {
             logString += binSortArrayList.getLog();
             logTextArea.setText(logString);
         });
+        southInputPanel.add(minCountLabel);
+        southInputPanel.add(addTermTF);
+
+        removeLastValueButton = new JButton("Remove Last Value");
+        removeLastValueButton.addActionListener(e -> {
+            System.out.println("Remove Last Value");
+            binSortArrayList.deleteLastAdded();
+            listString = "";
+            for (String s : binSortArrayList.toList()) {
+                listString += s + "\n";
+            }
+            listTextArea.setText(listString);
+            logString += binSortArrayList.getLog();
+            logTextArea.setText(logString);
+        });
+        centerFileBtnPanel.add(southInputPanel);
+        centerFileBtnPanel.add(goButton);
+        centerFileBtnPanel.add(removeLastValueButton);
+
+
+
+        centerPanel.add(centerFileBtnPanel, BorderLayout.SOUTH);
+        centerPanel.add(centerTAPanel, BorderLayout.CENTER);
+        centerPanel.add(centerNorthPanel, BorderLayout.NORTH);
+        return centerPanel;
+    }
+
+    private JPanel createSouthPanel() {
+        southPanel = new JPanel(new GridLayout(1, 2));
+
+
+        quitButton = new JButton("Quit");
+        addOutputFileButton = new JButton("Output to File");
+
+
+        southButtonsPanel = new JPanel(new GridLayout(1, 2));
+
 
         quitButton.addActionListener(e -> System.exit(0));
 
 
-        southInputPanel.add(minCountLabel);
-        southInputPanel.add(addTermTF);
-        southButtonsPanel.add(goButton);
+
+
         southButtonsPanel.add(quitButton);
 
-        southPanel.add(southInputPanel);
         southPanel.add(southButtonsPanel);
 
         return southPanel;
