@@ -5,7 +5,7 @@ public class BinSortFrame extends JFrame {
     CardLayout cardLayout;
 
     JPanel northPanel;
-    JPanel centerPanel;
+    JPanel enterCenterPanel;
     JPanel southPanel;
 
     JPanel centerNorthPanel;
@@ -15,6 +15,7 @@ public class BinSortFrame extends JFrame {
 
     JPanel card1;
     JPanel card2;
+    JPanel cardPanel;
 
     JPanel centerTAPanel;
     JPanel centerFileBtnPanel;
@@ -27,10 +28,15 @@ public class BinSortFrame extends JFrame {
     JButton quitButton;
 
     JButton removeLastValueButton;
-    JButton addOutputFileButton;
+    JButton addSwitchToSearch;
+    JButton searchSwitchToAdd;
+//    JButton addOutputFileButton;
 
     JTextArea listTextArea;
     JScrollPane listScrollPane;
+
+    JTextArea searchLogTextArea;
+    JScrollPane searchLogScrollPane;
 
     JTextArea logTextArea;
     JScrollPane logScrollPane;
@@ -67,11 +73,30 @@ public class BinSortFrame extends JFrame {
 
     private JPanel createCenterPanel() {
 
-        centerPanel = new JPanel();
-        centerPanel.setLayout(new BorderLayout());
+        card2 = createSearchPanel();
+        card1 = createAddPanel();
+
+        cardPanel.add(card1, "createView");
+        cardPanel.add(centerTAPanel, "SearchView");
+
+        cardLayout = new CardLayout();
+        cardPanel = new JPanel(cardLayout);
+
+        
 
 
-        centerNorthPanel = new JPanel(new GridLayout(2, 1));
+
+
+
+
+        return cardPanel;
+    }
+    private JPanel createAddPanel() {
+        enterCenterPanel = new JPanel();
+        enterCenterPanel.setLayout(new BorderLayout());
+
+
+//        centerNorthPanel = new JPanel(new GridLayout(2, 1));
 
         listTextArea = new JTextArea();
         listTextArea.setEditable(false);
@@ -100,7 +125,7 @@ public class BinSortFrame extends JFrame {
         goButton = new JButton("Add Value to List");
 
         goButton.addActionListener(e -> {
-            System.out.println("Go Button");
+//            System.out.println("Go Button");
             String addTerm = addTermTF.getText();
             binSortArrayList.add(addTerm);
             listString = "";
@@ -110,6 +135,7 @@ public class BinSortFrame extends JFrame {
             listTextArea.setText(listString);
             logString += binSortArrayList.getLog();
             logTextArea.setText(logString);
+            searchLogTextArea.setText(logString);
         });
         southInputPanel.add(minCountLabel);
         southInputPanel.add(addTermTF);
@@ -125,17 +151,82 @@ public class BinSortFrame extends JFrame {
             listTextArea.setText(listString);
             logString += binSortArrayList.getLog();
             logTextArea.setText(logString);
+            searchLogTextArea.setText(logString);
         });
+        addSwitchToSearch = new JButton("Switch to Search");
+        addSwitchToSearch.addActionListener(e -> {
+            cardLayout.show(cardPanel, "SearchView");
+        });
+
+
         centerFileBtnPanel.add(southInputPanel);
         centerFileBtnPanel.add(goButton);
         centerFileBtnPanel.add(removeLastValueButton);
 
+        JLabel addTitleLabel = new JLabel("Add to/Create new List");
 
 
-        centerPanel.add(centerFileBtnPanel, BorderLayout.SOUTH);
-        centerPanel.add(centerTAPanel, BorderLayout.CENTER);
-        centerPanel.add(centerNorthPanel, BorderLayout.NORTH);
-        return centerPanel;
+
+        enterCenterPanel.add(centerFileBtnPanel, BorderLayout.SOUTH);
+        enterCenterPanel.add(centerTAPanel, BorderLayout.CENTER);
+        enterCenterPanel.add(addTitleLabel, BorderLayout.NORTH);
+
+        return enterCenterPanel;
+    }
+
+
+
+    private JPanel createSearchPanel() {
+        JPanel searchPanel = new JPanel();
+        JTextArea searchTextArea = new JTextArea();
+        searchTextArea.setEditable(false);
+        searchTextArea.setFont(new Font("Monospaced", Font.PLAIN, 16));
+        JScrollPane searchScrollPane = new JScrollPane(searchTextArea);
+
+        searchLogTextArea = new JTextArea();
+        searchLogTextArea.setEditable(false);
+        searchLogTextArea.setFont(new Font("Monospaced", Font.PLAIN, 16));
+        searchLogScrollPane = new JScrollPane(searchLogTextArea);
+
+        JPanel searchCenterPanel = new JPanel(new GridLayout(1, 2));
+        searchCenterPanel.add(searchScrollPane);
+        searchCenterPanel.add(searchLogScrollPane);
+
+        JPanel searchButtonsPanel = new JPanel(new GridLayout(2, 2));
+        JPanel searchInputPanel = new JPanel(new GridLayout(2, 1));
+        JLabel searchInputLabel = new JLabel("Search Input:");
+        JTextField searchInput = new JTextField(35);
+
+        searchInputPanel.add(searchInputLabel);
+        searchInputPanel.add(searchInput);
+        searchButtonsPanel.add(searchInputPanel);
+
+        JButton searchSearchButton = new JButton("Search List");
+        searchSearchButton.addActionListener(e -> {
+            String search = searchInput.getText();
+            String result = binSortArrayList.binSearch(search);
+            searchTextArea.append(result);
+            logString += binSortArrayList.getLog();
+            logTextArea.setText(logString);
+            searchLogTextArea.setText(logString);
+            System.out.println("Searched");
+        });
+        searchButtonsPanel.add(searchSearchButton);
+        searchButtonsPanel.add(new JPanel());
+
+
+
+
+
+
+
+
+
+
+        searchPanel.add(searchCenterPanel, SwingConstants.CENTER);
+        searchPanel.add(searchButtonsPanel, SwingConstants.SOUTH);
+
+        return searchPanel;
     }
 
     private JPanel createSouthPanel() {
@@ -143,7 +234,7 @@ public class BinSortFrame extends JFrame {
 
 
         quitButton = new JButton("Quit");
-        addOutputFileButton = new JButton("Output to File");
+//        addOutputFileButton = new JButton("Output to File");
 
 
         southButtonsPanel = new JPanel(new GridLayout(1, 2));

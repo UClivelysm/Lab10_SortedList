@@ -5,7 +5,7 @@ import java.util.List;
  * A wrapper around ArrayList<String> that maintains elements in
  * ascending lexicographic order by inserting via manual binary search.
  * Logs each comparison and pointer adjustment in a readable format.
- * Supports deleting the most recently added element.
+ * Supports deleting the most recently added element and binary search.
  */
 public class BinSortArrayList {
     private final ArrayList<String> list;
@@ -33,7 +33,6 @@ public class BinSortArrayList {
             int mid = (low + high) / 2;
             String midVal = list.get(mid);
 
-            // Log comparison
             log.append(String.format("  [Compare] '%s' vs '%s' at index %d -> ",
                     element, midVal, mid));
 
@@ -47,7 +46,6 @@ public class BinSortArrayList {
             }
         }
 
-        // Final insertion point
         log.append(String.format("-> Found position: %d; inserting '%s'.%n", low, element));
         list.add(low, element);
         lastAddedIndex = low;
@@ -65,6 +63,42 @@ public class BinSortArrayList {
         } else {
             log.append("\n[Delete] No element to remove (no recent addition or already deleted).\n");
         }
+    }
+
+    /**
+     * Performs a binary search for the exact searchTerm.
+     * Logs each comparison and movement.
+     * Returns either "searchTerm Found At Position: index"
+     * or "Search Term not found: searchTerm; insertion index: index".
+     */
+    public String binSearch(String searchTerm) {
+        log.append(String.format("\n== Search '%s' ==%n", searchTerm));
+
+        int low = 0;
+        int high = list.size() - 1;
+
+        while (low <= high) {
+            int mid = (low + high) / 2;
+            String midVal = list.get(mid);
+
+            log.append(String.format("  [Compare] '%s' vs '%s' at index %d -> ",
+                    searchTerm, midVal, mid));
+            int cmp = searchTerm.compareTo(midVal);
+
+            if (cmp == 0) {
+                log.append(String.format("-> Found '%s' at index %d%n", searchTerm, mid));
+                return searchTerm + " Found At Position: " + mid;
+            } else if (cmp > 0) {
+                log.append(String.format("greater; move low to %d%n", mid + 1));
+                low = mid + 1;
+            } else {
+                log.append(String.format("less; move high to %d%n", mid - 1));
+                high = mid - 1;
+            }
+        }
+
+        log.append(String.format("-> '%s' not found; would insert at index %d%n", searchTerm, low));
+        return "Search Term Not Found: " + searchTerm + "; Would Be At Indel Position: " + low;
     }
 
     /**
