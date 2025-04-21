@@ -14,8 +14,12 @@ public class main {
         binSortArrayList.add(string5);
         binSortArrayList.add(string1);
 
+
         System.out.println(binSortArrayList);
         System.out.println(binSortArrayList.getLog());
+
+        System.out.println(binSortArrayList.binSearch("ac"));
+
     }
 
 }
